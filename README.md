@@ -115,57 +115,56 @@ portada del reproductor se editan en [`src/hooks/useMusic.js`](src/hooks/useMusi
 
 ## 5. Publicar en GitHub Pages
 
-### 5.1. Preparar el repositorio
+> **Aviso importante:** GitHub Pages debe publicar **la carpeta `dist/`
+> compilada**, nunca el código fuente del repositorio. El `index.html` de la
+> raíz carga `/src/main.jsx`, que GitHub Pages no puede servir (devuelve **404**
+> y la página queda en negro). La forma recomendada es el flujo de GitHub
+> Actions incluido en `.github/workflows/deploy.yml`: compila con Vite y publica
+> solo `dist/`.
 
-1. Crea un repositorio en GitHub llamado **`90-dias-infinitos`**.
-2. Edita [`package.json`](package.json) y reemplaza **`TU-USUARIO`** por tu
-   usuario real de GitHub:
+### 5.1. Subir los cambios
 
-   ```json
-   "homepage": "https://TU-USUARIO.github.io/90-dias-infinitos"
-   ```
+```bash
+git add .
+git commit -m "90 días, infinitos recuerdos"
+git push origin main
+```
 
-3. Sube el proyecto:
+### 5.2. Despliegue automático con GitHub Actions (recomendado)
 
-   ```bash
-   git init
-   git add .
-   git commit -m "Primera versión de 90 días, infinitos recuerdos"
-   git branch -M main
-   git remote add origin https://github.com/TU-USUARIO/90-dias-infinitos.git
-   git push -u origin main
-   ```
+1. Al hacer push a `main`, el flujo
+   [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) se ejecuta solo.
+2. En el repositorio: **Settings → Pages → Build and deployment →
+   Source: `GitHub Actions`**. Si estaba en «Deploy from a branch», cámbialo:
+   ahí es donde se estaba publicando el código fuente sin compilar.
+3. Espera a que termine el flujo en la pestaña **Actions**.
 
-### 5.2. Desplegar
+El sitio queda publicado en:
 
-El proyecto ya incluye `gh-pages` y los scripts necesarios. Solo ejecuta:
+```
+https://<usuario>.github.io/Mes-3/
+```
+
+En Actions el `base` se calcula automáticamente a partir del repositorio real,
+así que **no hay que tocar `vite.config.js`** aunque renombres el repositorio.
+
+### 5.3. Alternativa: publicar con `gh-pages` (rama)
+
+Si prefieres no usar Actions:
 
 ```bash
 npm run deploy
 ```
 
-Esto hace `build` (script `predeploy`) y publica la carpeta `dist/` en la rama
-`gh-pages`.
-
-### 5.3. Activar GitHub Pages
-
-En el repositorio: **Settings → Pages → Source: Deploy from a branch →
-Branch: `gh-pages` / `root` → Save.**
-
-En 1–2 minutos tu experiencia estará en:
-
-```
-https://TU-USUARIO.github.io/90-dias-infinitos/
-```
+Esto compila (script `predeploy`) y publica `dist/` en la rama `gh-pages`.
+Después configura **Settings → Pages → Deploy from a branch → `gh-pages` / (root)**.
+Con esta ruta el `base` sí depende de `REPO_NAME` en [`vite.config.js`](vite.config.js).
 
 ### 5.4. Si cambias el nombre del repositorio
 
-Edita **dos** sitios:
-
-1. [`vite.config.js`](vite.config.js) → constante `REPO_NAME`.
-2. [`package.json`](package.json) → campo `homepage`.
-
-Y vuelve a ejecutar `npm run deploy`.
+- Con **GitHub Actions**: no hay que hacer nada, se detecta automáticamente.
+- Con **`gh-pages`**: actualiza `REPO_NAME` en [`vite.config.js`](vite.config.js)
+  y el campo `homepage` de [`package.json`](package.json).
 
 ---
 
@@ -173,14 +172,15 @@ Y vuelve a ejecutar `npm run deploy`.
 
 Tras `npm run build`, comprueba que:
 
-- **CSS/JS:** `dist/index.html` referencia `/90-dias-infinitos/assets/…`.
+- **CSS/JS:** `dist/index.html` referencia `/Mes-3/assets/…` y **no** contiene
+  ninguna referencia a `/src/main.jsx`.
 - **Imágenes:** `dist/images/recuerdos/…` y `dist/images/nosotros/…` existen.
-- **Música:** `dist/music/` existe (coloca ahí tu `.mp3`).
-- **`.nojekyll`:** `dist/.nojekyll` está presente (evita que GitHub Pages ignore
-  archivos que empiezan con guion bajo).
+- **Música:** `dist/music/nuestro-cancion.mp3` existe.
+- **`.nojekyll`:** `dist/.nojekyll` está presente.
+- No debe existir ninguna carpeta `dist/src/`.
 
-Si algo no carga en producción, casi siempre es porque `REPO_NAME` en
-`vite.config.js` no coincide con el nombre real del repositorio.
+Si algo no carga en producción, casi siempre es porque el nombre del repositorio
+y el subdirectorio usado en `base` no coinciden.
 
 ---
 

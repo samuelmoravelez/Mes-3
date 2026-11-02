@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "90 días, infinitos recuerdos — experiencia web cinematográfica.",
-  "homepage": "https://TU-USUARIO.github.io/90-dias-infinitos",
+  "homepage": "https://samuelmoravelez.github.io/Mes-3/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

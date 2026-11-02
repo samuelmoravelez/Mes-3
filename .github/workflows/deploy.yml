@@ -1,0 +1,70 @@
+# ============================================================
+#  Despliegue automático en GitHub Pages
+# ============================================================
+#  Este flujo NO publica el código fuente del repositorio: compila el
+#  proyecto con Vite (`npm run build`) y publica únicamente la carpeta
+#  `dist/`, que es la que contiene el HTML, el CSS y el JavaScript ya
+#  transformados y con las rutas correctas del subdirectorio del repo.
+#
+#  Esto es precisamente lo que evita el error "main.jsx 404": el
+#  `index.html` de la raíz carga `/src/main.jsx` (código fuente JSX que
+#  GitHub Pages no puede servir), mientras que el `index.html` compilado
+#  carga los bundles de `dist/assets/` con el prefijo `/Mes-3/`.
+#
+#  Requisito (una sola vez):
+#    Repositorio → Settings → Pages → Build and deployment
+#    → Source = "GitHub Actions".
+
+name: Deploy a GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar con Vite
+        run: npm run build
+
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir la carpeta dist
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
