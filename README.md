@@ -4,9 +4,9 @@ Experiencia web cinematográfica y romántica creada para **«Mi niña»**.
 Cinco escenas —bienvenida, línea de tiempo, constelación, carta y final— con
 contador de días en vivo, música de fondo persistente y animaciones suaves.
 
-> **Importante:** todo el contenido (recuerdos, fechas, fotos y canción) es de
-> **demostración**. Revísalo y personalízalo antes de publicar. Nada de lo que
-> aparece está inventado como recuerdo real: son textos genéricos de ejemplo.
+> **Nota:** los textos, fechas, fotografías y la canción son los definitivos
+> del proyecto. Si quieres ajustar algo, todo el contenido editable está
+> centralizado en `src/data/` (ver sección 4).
 
 ---
 
@@ -65,9 +65,9 @@ componentes.
 
 ### 4.2. Recuerdos de la constelación — [`src/data/memories.js`](src/data/memories.js)
 
-Array `memories` con 10 objetos. Cada uno tiene:
+Array `memories` con **6 objetos** (las 6 estrellas de la constelación). Cada uno tiene:
 
-- `title`, `description`, `message`: el texto que se muestra al abrir la estrella.
+- `title`, `description`: el texto que se muestra al abrir la estrella.
 - `date`: `null` por defecto → cámbialo por `'AAAA-MM-DD'` si quieres mostrar fecha.
 - `image`: ruta dentro de `public/` (ver 4.4).
 - `coords {x, y}`, `size`, `placeholder`: posición y tamaño de la estrella en el mapa.
@@ -85,19 +85,19 @@ y estrellas.
 
 ### 4.4. Fotografías — carpeta [`public/images/`](public/images/)
 
-Sustituye los SVG de demostración por tus fotos reales. **Mantén el mismo
-nombre** o actualiza la ruta en el archivo de datos correspondiente.
+Las fotografías reales ya están incluidas. **Mantén exactamente el mismo
+nombre y extensión** (GitHub Pages distingue mayúsculas y minúsculas) o
+actualiza la ruta en el archivo de datos correspondiente.
 
 ```
-public/images/recuerdos/recuerdo-01.svg … recuerdo-10.svg   → fotos de cada recuerdo
-public/images/nosotros/nosotros.svg                          → foto de la sección final
-public/images/nosotros/portada.svg                           → portada del reproductor
+public/images/recuerdos/imagen1.jpg … imagen6.jpg   → foto de cada recuerdo (memories.js)
+public/images/nosotros/imagen1.jpg                  → foto final (Finale.jsx) y portada del reproductor (useMusic.js)
 ```
 
-Si usas `.jpg` / `.png`, además de reemplazar el archivo, actualiza la ruta en:
+Si cambias un archivo (por ejemplo a `.png`), actualiza también la ruta en:
 - `memories.js` (campo `image` de cada recuerdo),
 - `useMusic.js` (campo `cover`),
-- `Finale.jsx` (foto de la sección final).
+- `Finale.jsx` (constante `OUR_PHOTO`).
 
 ### 4.5. Canción — [`public/music/`](public/music/)
 

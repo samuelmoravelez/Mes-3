@@ -27,7 +27,7 @@ export const TRACK = {
   title: 'Nuestra canción',
   artist: 'Edita el título en src/hooks/useMusic.js',
   /* Portada opcional: si el archivo no existe se oculta sola */
-  cover: 'images/nosotros/portada.svg',
+  cover: 'images/nosotros/imagen1.jpg',
   /* Archivo de audio (debe existir en public/music/) */
   src: 'music/nuestro-cancion.mp3',
 }
